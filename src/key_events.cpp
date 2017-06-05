@@ -10,15 +10,25 @@ static bool handle_synthetic_keyswitch_event(Key mappedKey, uint8_t keyState) {
   if (mappedKey.flags & IS_INTERNAL) {
     return false;
   } else if (mappedKey.flags & IS_CONSUMER) {
-    if (key_is_pressed(keyState))
-      ConsumerControl.press(mappedKey.keyCode);
-    else if (key_was_pressed(keyState))
-      ConsumerControl.release(mappedKey.keyCode);
+    if (key_is_pressed(keyState)) {
+      EventDispatcher::eventDispatchers().call(
+        &EventDispatcher::consumerPress, Kaleidoscope.connectionMask,
+        mappedKey.keyCode);
+    } else if (key_was_pressed(keyState)) {
+      EventDispatcher::eventDispatchers().call(
+        &EventDispatcher::consumerRelease, Kaleidoscope.connectionMask,
+        mappedKey.keyCode);
+    }
   } else if (mappedKey.flags & IS_SYSCTL) {
-    if (key_is_pressed(keyState))
-      SystemControl.press(mappedKey.keyCode);
-    else if (key_was_pressed(keyState))
-      SystemControl.release();
+    if (key_is_pressed(keyState)) {
+      EventDispatcher::eventDispatchers().call(&EventDispatcher::systemPress,
+          Kaleidoscope.connectionMask,
+          mappedKey.keyCode);
+    } else if (key_was_pressed(keyState)) {
+      EventDispatcher::eventDispatchers().call(
+        &EventDispatcher::systemRelease, Kaleidoscope.connectionMask,
+        mappedKey.keyCode);
+    }
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
   }
@@ -40,44 +50,72 @@ static bool handle_keyswitch_event_default(Key mappedKey, byte row, byte col, ui
   return true;
 }
 
+
+
+
+ 
 void press_key(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    Keyboard.press(Key_LeftShift.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+        Kaleidoscope.connectionMask,
+        Key_LeftShift.keyCode);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    Keyboard.press(Key_LeftControl.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+        Kaleidoscope.connectionMask,
+        Key_LeftControl.keyCode);
   }
-  if (mappedKey.flags & LALT_HELD) {
-    Keyboard.press(Key_LeftAlt.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+        Kaleidoscope.connectionMask,
+        Key_LeftAlt.keyCode);
   }
   if (mappedKey.flags & RALT_HELD) {
-    Keyboard.press(Key_RightAlt.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+        Kaleidoscope.connectionMask,
+        Key_RightAlt.keyCode);
   }
   if (mappedKey.flags & GUI_HELD) {
-    Keyboard.press(Key_LeftGui.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+        Kaleidoscope.connectionMask,
+        Key_LeftGui.keyCode);
   }
-  Keyboard.press(mappedKey.keyCode);
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
+      Kaleidoscope.connectionMask,
+      mappedKey.keyCode);
 }
 
 
 void release_key(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    Keyboard.release(Key_LeftShift.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+        Kaleidoscope.connectionMask,
+        Key_LeftShift.keyCode);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    Keyboard.release(Key_LeftControl.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+        Kaleidoscope.connectionMask,
+        Key_LeftControl.keyCode);
   }
   if (mappedKey.flags & LALT_HELD) {
-    Keyboard.release(Key_LeftAlt.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+        Kaleidoscope.connectionMask,
+        Key_LeftAlt.keyCode);
   }
   if (mappedKey.flags & RALT_HELD) {
-    Keyboard.release(Key_RightAlt.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+        Kaleidoscope.connectionMask,
+        Key_RightAlt.keyCode);
   }
   if (mappedKey.flags & GUI_HELD) {
-    Keyboard.release(Key_LeftGui.keyCode);
+    EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+        Kaleidoscope.connectionMask,
+        Key_LeftGui.keyCode);
   }
-  Keyboard.release(mappedKey.keyCode);
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
+      Kaleidoscope.connectionMask,
+      mappedKey.keyCode);
 }
+ 
 
 void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState) {
   if (!(keyState & INJECTED)) {
@@ -93,4 +131,9 @@ void handle_keyswitch_event(Key mappedKey, byte row, byte col, uint8_t keyState)
   if (mappedKey.raw == Key_NoKey.raw)
     return;
   handle_keyswitch_event_default(mappedKey, row, col, keyState);
+}
+
+void send_keyboard_report() {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::keySendReport,
+      Kaleidoscope.connectionMask);
 }
