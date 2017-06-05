@@ -56,4 +56,27 @@ class EventDispatcher {
   virtual void keyRelease(uint8_t connectionMask, uint8_t keyCode) = 0;
   virtual void keyReleaseAll(uint8_t connectionMask) = 0;
   virtual void keySendReport(uint8_t connectionMask) = 0;
+
+  /** Mouse events
+   * See above for commentary on connectionMask. */
+
+   virtual void mouseMove(uint8_t connectionMask, signed char x, signed char y, signed char wheel) = 0;
+   virtual void mouseClick(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void mouseButtons(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void mousePress(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void mouseRelease(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void mouseArePressed(uint8_t connectionMask, uint8_t buttons) = 0;
+
+  /** Absolute mouse (grapahics tablet) events
+   * See above for commentary on connectionMask. */
+
+   virtual void absoluteMouseMove(uint8_t connectionMask, signed char x, signed char y, signed char wheel) = 0;
+   virtual void absoluteMouseMoveTo(uint8_t connectionMask, uint16_t x, uint16_t y, signed char wheel) = 0;
+   virtual void absoluteMouseClick(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void absoluteMouseButtons(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void absoluteMousePress(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void absoluteMouseRelease(uint8_t connectionMask, uint8_t buttons) = 0;
+   virtual void absoluteMouseArePressed(uint8_t connectionMask, uint8_t buttons) = 0;
+
+
 };
