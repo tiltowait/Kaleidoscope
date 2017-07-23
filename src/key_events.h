@@ -58,6 +58,14 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState);
 /** Flushes any pending regular key switch events and sends them out */
 void send_keyboard_report();
 
-// Internal use
+// A facade on top of our HID implementation
 void pressKey(Key mappedKey);
 void releaseKey(Key mappedKey);
+void press_key_raw(Key mappedKey);
+void release_key_raw(Key mappedKey);
+
+void press_consumer(Key mappedKey);
+void release_consumer(Key mappedKey);
+
+void press_system(Key mappedKey);
+void release_system(Key mappedKey);
