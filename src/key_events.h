@@ -69,3 +69,17 @@ void release_consumer(Key mappedKey);
 
 void press_system(Key mappedKey);
 void release_system(Key mappedKey);
+
+void moveMouse(signed char x, signed char y, signed char wheel);
+void clickMouseButtons(uint8_t buttons);
+void setMouseButtons(uint8_t buttons);
+void pressMouseButtons(uint8_t buttons);
+void releaseMouseButtons(uint8_t buttons);
+void moveAbsoluteMouse(signed char x, signed char y, signed char wheel);
+void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel);
+void clickAbsoluteMouseButtons(uint8_t buttons);
+void setAbsoluteMouseButtons(uint8_t buttons);
+void pressAbsoluteMouseButtons(uint8_t buttons);
+void releaseAbsoluteMouseButtons(uint8_t buttons);
+
+

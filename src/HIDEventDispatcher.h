@@ -70,6 +70,86 @@ class HIDEventDispatcher : public EventDispatcher {
       Keyboard.sendReport();
     }
   }
+
+
+
+  /** Mouse events
+   * See above for commentary on connectionMask. */
+
+  void mouseMove(uint8_t connectionMask, signed char x, signed char y, signed char wheel) override {
+    if (connectionMask & Usb) {
+      Mouse.move(x, y, wheel);
+    }
+  }
+
+  void mouseClick(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      Mouse.click(buttons);
+    }
+  }
+
+  void mouseButtons(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      Mouse.buttons(buttons);
+    }
+  }
+
+  void mousePress(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      Mouse.press(buttons);
+    }
+  }
+
+  void mouseRelease(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      Mouse.release(buttons);
+    }
+  }
+
+
+  /** Absolute mouse (grapahics tablet) events
+   * See above for commentary on connectionMask. */
+
+  void absoluteMouseMove(uint8_t connectionMask, signed char x, signed char y, signed char wheel) override {
+    if (connectionMask & Usb) {
+      AbsoluteMouse.Move(x, y, wheel);
+    }
+  }
+
+  void absoluteMouseMoveTo(uint8_t connectionMask, uint16_t x, uint16_t y, signed char wheel) override {
+    if (connectionMask & Usb) {
+      AbsoluteMouse.MoveTo(x, y, wheel);
+    }
+  }
+
+  void absoluteMouseClick(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      AbsoluteMouse.click(buttons);
+    }
+  }
+
+  void absoluteMouseButtons(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      AbsoluteMouse.buttons(buttons);
+    }
+  }
+
+  void absoluteMousePress(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      AbsoluteMouse.press(buttons);
+    }
+  }
+
+  void absoluteMouseRelease(uint8_t connectionMask, uint8_t buttons) override {
+    if (connectionMask & Usb) {
+      AbsoluteMouse.release(buttons);
+    }
+  }
+
+
+
+
+
 };
 
 #endif

@@ -147,3 +147,84 @@ void send_keyboard_report() {
   EventDispatcher::eventDispatchers().call(&EventDispatcher::keySendReport,
       Kaleidoscope.connectionMask);
 }
+
+
+/** Mouse events
+ * See above for commentary on connectionMask. */
+
+
+void moveMouse(signed char x, signed char y, signed char wheel) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::mouseMove,
+      Kaleidoscope.connectionMask,
+      x, y, wheel);
+}
+
+void clickMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::mouseClick,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+void setMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::mouseButtons,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+void pressMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::mousePress,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+void releaseMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::mouseRelease,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+/** Absolute mouse (grapahics tablet) events
+ * See above for commentary on connectionMask. */
+
+void moveAbsoluteMouse(signed char x, signed char y, signed char wheel) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::absoluteMouseMove,
+      Kaleidoscope.connectionMask,
+      x, y, wheel);
+}
+void moveAbsoluteMouseTo(uint16_t x, uint16_t y, signed char wheel) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::absoluteMouseMoveTo,
+      Kaleidoscope.connectionMask,
+      x, y, wheel);
+}
+
+
+
+
+void clickAbsoluteMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::absoluteMouseClick,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+void setAbsoluteMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::absoluteMouseButtons,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+void pressAbsoluteMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::absoluteMousePress,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+void releaseAbsoluteMouseButtons(uint8_t buttons) {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::absoluteMouseRelease,
+      Kaleidoscope.connectionMask,
+      buttons);
+}
+
+
+
+
+
