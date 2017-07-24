@@ -1,25 +1,25 @@
 #include "Kaleidoscope.h"
 
 
-static void press_consumer(Key mappedKey) {
+static void pressConsumer(Key mappedKey) {
   EventDispatcher::eventDispatchers().call(
     &EventDispatcher::consumerPress, Kaleidoscope.connectionMask,
     mappedKey.keyCode);
 }
 
-static void release_consumer(Key mappedKey) {
+static void releaseConsumer(Key mappedKey) {
   EventDispatcher::eventDispatchers().call(
     &EventDispatcher::consumerRelease, Kaleidoscope.connectionMask,
     mappedKey.keyCode);
 }
 
-static void press_system(Key mappedKey) {
+static void pressSystem(Key mappedKey) {
   EventDispatcher::eventDispatchers().call(&EventDispatcher::systemPress,
       Kaleidoscope.connectionMask,
       mappedKey.keyCode);
 }
 
-static void release_system(Key mappedKey) {
+static void releaseSystem(Key mappedKey) {
   EventDispatcher::eventDispatchers().call(
     &EventDispatcher::systemRelease, Kaleidoscope.connectionMask,
     mappedKey.keyCode);
@@ -36,15 +36,15 @@ static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
     return false;
   } else if (mappedKey.flags & IS_CONSUMER) {
     if (keyIsPressed(keyState)) {
-      press_consumer(mappedKey);
+      pressConsumer(mappedKey);
     } else if (keyWasPressed(keyState)) {
-      release_consumer(mappedKey);
+      releaseConsumer(mappedKey);
     }
   } else if (mappedKey.flags & IS_SYSCTL) {
     if (keyIsPressed(keyState)) {
-      press_system(mappedKey);
+      pressSystem(mappedKey);
     } else if (keyWasPressed(keyState)) {
-	release_system(mappedKey);
+      releaseSystem(mappedKey);
     }
   } else if (mappedKey.flags & SWITCH_TO_KEYMAP) {
     // Should not happen, handled elsewhere.
@@ -67,7 +67,7 @@ static bool handleKeyswitchEventDefault(Key mappedKey, byte row, byte col, uint8
   return true;
 }
 
-void press_key_raw(Key mappedKey) {
+void pressKeyRaw(Key mappedKey) {
   EventDispatcher::eventDispatchers().call(&EventDispatcher::keyPress,
       Kaleidoscope.connectionMask,
       mappedKey.keyCode);
@@ -76,53 +76,53 @@ void press_key_raw(Key mappedKey) {
  
 void pressKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    press_key_raw(keyCode);
+    pressKeyRaw(keyCode);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    press_key_raw(Key_LeftControl);
+    pressKeyRaw(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-    press_key_raw(Key_LeftAlt);
+    pressKeyRaw(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-    press_key_raw(Key_RightAlt);
+    pressKeyRaw(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-    press_key_raw(Key_LeftGui);
+    pressKeyRaw(Key_LeftGui);
   }
 
-  press_key_raw(mappedKey);
+  pressKeyRaw(mappedKey);
 }
 
-void release_key_raw(Key mappedKey) {
+void releaseKeyRaw(Key mappedKey) {
   EventDispatcher::eventDispatchers().call(&EventDispatcher::keyRelease,
       Kaleidoscope.connectionMask,
       mappedKey.keyCode);
 
 }
 
-void release_all_keys() {
+void releaseAllKeys() {
   EventDispatcher::eventDispatchers().call(&EventDispatcher::keyReleaseAll,
       Kaleidoscope.connectionMask);
 }
 
 void releaseKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-    release_key_raw(Key_LeftShift);
+    releaseKeyRaw(Key_LeftShift);
   }
   if (mappedKey.flags & CTRL_HELD) {
-    release_key_raw(Key_LeftControl);
+    releaseKeyRaw(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-    release_key_raw(Key_LeftAlt);
+    releaseKeyRaw(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-    release_key_raw(Key_RightAlt);
+    releaseKeyRaw(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-    release_key_raw(Key_LeftGui);
+    releaseKeyRaw(Key_LeftGui);
   }
-  release_key_raw(mappedKey);
+  releaseKeyRaw(mappedKey);
 }
 
 
@@ -143,7 +143,7 @@ void handleKeyswitchEvent(Key mappedKey, byte row, byte col, uint8_t keyState) {
   handleKeyswitchEventDefault(mappedKey, row, col, keyState);
 }
 
-void send_keyboard_report() {
+void sendKeyboardReport() {
   EventDispatcher::eventDispatchers().call(&EventDispatcher::keySendReport,
       Kaleidoscope.connectionMask);
 }
