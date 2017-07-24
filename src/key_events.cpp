@@ -2,27 +2,27 @@
 
 
 static void press_consumer(Key mappedKey) {
-      EventDispatcher::eventDispatchers().call(
-        &EventDispatcher::consumerPress, Kaleidoscope.connectionMask,
-        mappedKey.keyCode);
+  EventDispatcher::eventDispatchers().call(
+    &EventDispatcher::consumerPress, Kaleidoscope.connectionMask,
+    mappedKey.keyCode);
 }
 
 static void release_consumer(Key mappedKey) {
-      EventDispatcher::eventDispatchers().call(
-        &EventDispatcher::consumerRelease, Kaleidoscope.connectionMask,
-        mappedKey.keyCode);
+  EventDispatcher::eventDispatchers().call(
+    &EventDispatcher::consumerRelease, Kaleidoscope.connectionMask,
+    mappedKey.keyCode);
 }
 
 static void press_system(Key mappedKey) {
-      EventDispatcher::eventDispatchers().call(&EventDispatcher::systemPress,
-          Kaleidoscope.connectionMask,
-          mappedKey.keyCode);
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::systemPress,
+      Kaleidoscope.connectionMask,
+      mappedKey.keyCode);
 }
 
 static void release_system(Key mappedKey) {
-      EventDispatcher::eventDispatchers().call(
-        &EventDispatcher::systemRelease, Kaleidoscope.connectionMask,
-        mappedKey.keyCode);
+  EventDispatcher::eventDispatchers().call(
+    &EventDispatcher::systemRelease, Kaleidoscope.connectionMask,
+    mappedKey.keyCode);
 }
 
 static bool handleSyntheticKeyswitchEvent(Key mappedKey, uint8_t keyState) {
@@ -76,19 +76,19 @@ void press_key_raw(Key mappedKey) {
  
 void pressKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-        press_key_raw(keyCode);
+    press_key_raw(keyCode);
   }
   if (mappedKey.flags & CTRL_HELD) {
-        press_key_raw(Key_LeftControl);
+    press_key_raw(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-        press_key_raw(Key_LeftAlt);
+    press_key_raw(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-        press_key_raw(Key_RightAlt);
+    press_key_raw(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-        press_key_raw(Key_LeftGui);
+    press_key_raw(Key_LeftGui);
   }
 
   press_key_raw(mappedKey);
@@ -101,21 +101,26 @@ void release_key_raw(Key mappedKey) {
 
 }
 
+void release_all_keys() {
+  EventDispatcher::eventDispatchers().call(&EventDispatcher::keyReleaseAll,
+      Kaleidoscope.connectionMask);
+}
+
 void releaseKey(Key mappedKey) {
   if (mappedKey.flags & SHIFT_HELD) {
-  	release_key_raw(Key_LeftShift);
+    release_key_raw(Key_LeftShift);
   }
   if (mappedKey.flags & CTRL_HELD) {
-  	release_key_raw(Key_LeftControl);
+    release_key_raw(Key_LeftControl);
   }
   if (mappedKey.flags & LALT_HELD) {
-  	release_key_raw(Key_LeftAlt);
+    release_key_raw(Key_LeftAlt);
   }
   if (mappedKey.flags & RALT_HELD) {
-  	release_key_raw(Key_RightAlt);
+    release_key_raw(Key_RightAlt);
   }
   if (mappedKey.flags & GUI_HELD) {
-	  release_key_raw(Key_LeftGui);
+    release_key_raw(Key_LeftGui);
   }
   release_key_raw(mappedKey);
 }
