@@ -41,11 +41,9 @@ Kaleidoscope_::loop(void) {
     loopHook hook = loopHooks[i];
     (*hook)(false);
   }
-
-  EventDispatcher::eventDispatchers().call(&EventDispatcher::keySendReport,
-      connectionMask);
-  EventDispatcher::eventDispatchers().call(&EventDispatcher::keyReleaseAll,
-      connectionMask);
+  
+  sendKeyboardReport();
+  releaseAllKeys();
 
   for (byte i = 0; loopHooks[i] != NULL && i < HOOK_MAX; i++) {
     loopHook hook = loopHooks[i];
