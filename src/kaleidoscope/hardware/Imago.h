@@ -3,7 +3,7 @@
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of version 3 of the GNU General Public License as 
+ * it under the terms of version 3 of the GNU General Public License as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
@@ -159,7 +159,7 @@ class Imago {
 constexpr uint8_t keyIndex(byte row, byte col) {
   return (row * kaleidoscope::hardware::Imago::matrix_columns) + col + 1;
 }
-/* 
+/*
   This oneliner will generate these constexprs:
 
   perl -e'for($i=0;$i<6;$i++) { for ($j=0; $j<16;$j++) { print "constexpr uint8_t R${i}C${j} = keyIndex($i, $j);\n"}};'

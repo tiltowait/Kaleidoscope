@@ -3,7 +3,7 @@
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of version 3 of the GNU General Public License as 
+ * it under the terms of version 3 of the GNU General Public License as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
@@ -48,7 +48,7 @@ uint8_t Imago::debounce = 3;
 #define PIN_ROW3 _BV(1)
 #define PIN_ROW4 _BV(0)
 
-static constexpr uint8_t row_pins[] = {_BV(6),_BV(5), _BV(4), _BV(1), _BV(0)};
+static constexpr uint8_t row_pins[] = {_BV(6), _BV(5), _BV(4), _BV(1), _BV(0)};
 
 #define ROW_PINS (PIN_ROW0| PIN_ROW1| PIN_ROW2| PIN_ROW3| PIN_ROW4)
 
@@ -130,14 +130,14 @@ void Imago::setup(void) {
 
   DDRD &= ~(COLPINS_PORTD);
   PORTD |= (COLPINS_PORTD);
-  
+
   DDRE &= ~(COLPINS_PORTE);
   PORTE |= (COLPINS_PORTE);
 
   DDRF &= ~(COLPINS_PORTF);
   PORTF |= (COLPINS_PORTF);
 
-/* Set up Timer1 for 500usec */
+  /* Set up Timer1 for 500usec */
   TCCR1B = _BV(WGM13);
   TCCR1A = 0;
 
