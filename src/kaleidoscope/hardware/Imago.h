@@ -3,9 +3,8 @@
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of version 3 of the GNU General Public License as 
+ * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -125,8 +124,7 @@ class Imago {
 
   static void readMatrixRow(uint8_t row);
   static uint16_t readCols();
-  static void selectRow(uint8_t row);
-  static void unselectRow(uint8_t row);
+  static void toggleRow(uint8_t row);
 
   static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
   static uint16_t debounceMaskForRow(uint8_t row);

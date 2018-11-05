@@ -3,9 +3,8 @@
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * it under the terms of version 3 of the GNU General Public License as 
+ * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,24 +30,33 @@ ISR(TIMER1_OVF_vect) {
 namespace kaleidoscope {
 namespace hardware {
 
-uint16_t Imago::previousKeyState_[ROWS];
-uint16_t Imago::keyState_[ROWS];
-uint16_t Imago::masks_[ROWS];
+uint16_t Imago::previousKeyState_[matrix_rows] = {0} ;
+uint16_t Imago::keyState_[matrix_rows] = {0};
+uint16_t Imago::masks_[matrix_rows];
 
-uint8_t Imago::debounce_matrix_[ROWS][COLS];
+uint8_t Imago::debounce_matrix_[matrix_rows][matrix_columns];
 uint8_t Imago::debounce = 3;
 
 #define PORT_ROWS PORTF
 #define DDR_ROWS DDRF
 #define PIN_ROWS PINF
 
-#define ROW_PINS (_BV(0) |_BV(1)|_BV(4)|_BV(5)|_BV(6) )
 
 #define PIN_ROW0 _BV(6)
 #define PIN_ROW1 _BV(5)
 #define PIN_ROW2 _BV(4)
 #define PIN_ROW3 _BV(1)
 #define PIN_ROW4 _BV(0)
+
+static constexpr uint8_t row_pins[] = {_BV(6),_BV(5), _BV(4), _BV(1), _BV(0)};
+
+#define ROW_PINS (PIN_ROW0| PIN_ROW1| PIN_ROW2| PIN_ROW3| PIN_ROW4)
+
+
+/* For future use
+ static constexpr colpins[matrix_columns] =    {PINB,PINB,PINE,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
+static constexpr colpinbits[matrix_columns] = {2,7,2,7,6,6,5,4,7,6,4,5,3,2,6,7};
+ */
 
 #define COLPINS_PORTB ( _BV(2)|_BV(4)|_BV(5)|_BV(6)|_BV(7))
 #define COLPINS_PORTC (_BV(6)|_BV(7))
@@ -109,10 +117,7 @@ void Imago::setup(void) {
   wdt_disable();
   delay(100);
 
-  for (uint8_t i = 0; i < ROWS; i++) {
-    unselectRow(i);
-    keyState_[i] = previousKeyState_[i] = 0;
-  }
+  PORT_ROWS &= ~(ROW_PINS);
 
   DDR_ROWS |= ROW_PINS;
 
@@ -143,48 +148,8 @@ void Imago::setup(void) {
   TIMSK1 = _BV(TOIE1);
 }
 
-void Imago::selectRow(uint8_t row) {
-  switch (row) {
-  case 0:
-    PORT_ROWS &= ~(PIN_ROW0);
-    break;
-  case 1:
-    PORT_ROWS &= ~(PIN_ROW1);
-    break;
-  case 2:
-    PORT_ROWS &= ~(PIN_ROW2);
-    break;
-  case 3:
-    PORT_ROWS &= ~(PIN_ROW3);
-    break;
-  case 4:
-    PORT_ROWS &= ~(PIN_ROW4);
-    break;
-  default:
-    break;
-  }
-}
-
-void Imago::unselectRow(uint8_t row) {
-  switch (row) {
-  case 0:
-    PORT_ROWS |= PIN_ROW1;
-    break;
-  case 1:
-    PORT_ROWS |= PIN_ROW1;
-    break;
-  case 2:
-    PORT_ROWS |= PIN_ROW2;
-    break;
-  case 3:
-    PORT_ROWS |= PIN_ROW3;
-    break;
-  case 4:
-    PORT_ROWS |= PIN_ROW4;
-    break;
-  default:
-    break;
-  }
+void Imago::toggleRow(uint8_t row) {
+   PORT_ROWS ^= row_pins[row];
 }
 
 uint16_t Imago::readCols() {
@@ -216,23 +181,23 @@ void Imago::readMatrixRow(uint8_t current_row) {
 
   mask = debounceMaskForRow(current_row);
 
-  selectRow(current_row);
+  toggleRow(current_row);
   cols = (readCols() & mask) | (keyState_[current_row] & ~mask);
-  unselectRow(current_row);
+  toggleRow(current_row);
   debounceRow(cols ^ keyState_[current_row], current_row);
   keyState_[current_row] = cols;
 }
 
 void Imago::readMatrix() {
   do_scan_ = false;
-  for (uint8_t current_row = 0; current_row < ROWS; current_row++) {
+  for (uint8_t current_row = 0; current_row < matrix_rows; current_row++) {
     readMatrixRow(current_row);
   }
 }
 
 void Imago::actOnMatrixScan() {
-  for (byte row = 0; row < ROWS; row++) {
-    for (byte col = 0; col < COLS; col++) {
+  for (byte row = 0; row < matrix_rows; row++) {
+    for (byte col = 0; col < matrix_columns; col++) {
       uint8_t keyState = (bitRead(previousKeyState_[row], col) << 0) |
                          (bitRead(keyState_[row], col) << 1);
       if (keyState) {
@@ -252,21 +217,21 @@ void Imago::scanMatrix() {
 }
 
 void Imago::maskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+  if (row >= matrix_rows || col >= matrix_columns)
     return;
 
   bitWrite(masks_[row], col, 1);
 }
 
 void Imago::unMaskKey(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+  if (row >= matrix_rows || col >= matrix_columns)
     return;
 
   bitWrite(masks_[row], col, 0);
 }
 
 bool Imago::isKeyMasked(byte row, byte col) {
-  if (row >= ROWS || col >= COLS)
+  if (row >= matrix_rows || col >= matrix_columns)
     return false;
 
   return bitRead(masks_[row], col);
@@ -287,13 +252,13 @@ bool Imago::isKeyswitchPressed(byte row, byte col) {
 
 bool Imago::isKeyswitchPressed(uint8_t keyIndex) {
   keyIndex--;
-  return isKeyswitchPressed(keyIndex / COLS, keyIndex % COLS);
+  return isKeyswitchPressed(keyIndex / matrix_columns, keyIndex % matrix_columns);
 }
 
 uint8_t Imago::pressedKeyswitchCount() {
   uint8_t count = 0;
 
-  for (uint8_t r = 0; r < ROWS; r++) {
+  for (uint8_t r = 0; r < matrix_rows; r++) {
     count += __builtin_popcount(keyState_[r]);
   }
   return count;
@@ -302,7 +267,7 @@ uint8_t Imago::pressedKeyswitchCount() {
 uint16_t Imago::debounceMaskForRow(uint8_t row) {
   uint16_t result = 0;
 
-  for (uint16_t c = 0; c < COLS; ++c) {
+  for (uint16_t c = 0; c < matrix_columns; ++c) {
     if (debounce_matrix_[row][c]) {
       --debounce_matrix_[row][c];
     } else {
@@ -313,7 +278,7 @@ uint16_t Imago::debounceMaskForRow(uint8_t row) {
 }
 
 void Imago::debounceRow(uint16_t change, uint8_t row) {
-  for (uint16_t i = 0; i < COLS; ++i) {
+  for (uint16_t i = 0; i < matrix_columns; ++i) {
     if (change & (1 << i)) {
       debounce_matrix_[row][i] = debounce;
     }
