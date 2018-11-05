@@ -53,10 +53,8 @@ static constexpr uint8_t row_pins[] = {_BV(6), _BV(5), _BV(4), _BV(1), _BV(0)};
 #define ROW_PINS (PIN_ROW0| PIN_ROW1| PIN_ROW2| PIN_ROW3| PIN_ROW4)
 
 
-/* For future use
- static constexpr colpins[matrix_columns] =    {PINB,PINB,PINE,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
-static constexpr colpinbits[matrix_columns] = {2,7,2,7,6,6,5,4,7,6,4,5,3,2,6,7};
- */
+ static uint8_t colpins[matrix_columns] =    {PINB,PINB,PINE,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
+static constexpr uint8_t colpinbits[matrix_columns] = {2,7,2,7,6,6,5,4,7,6,4,5,3,2,6,7};
 
 #define COLPINS_PORTB ( _BV(2)|_BV(4)|_BV(5)|_BV(6)|_BV(7))
 #define COLPINS_PORTC (_BV(6)|_BV(7))
@@ -153,25 +151,12 @@ void Imago::toggleRow(uint8_t row) {
 }
 
 
-// TODO - could we generate this code with a macro or a template
-// so it automatically adapts to the number of cols?
 uint16_t Imago::readCols() {
-  return (!!(PIN_COL0 & (PINBIT_COL0)) << 0) |
-         (!!(PIN_COL1 & (PINBIT_COL1)) << 1) |
-         (!!(PIN_COL2 & (PINBIT_COL2)) << 2) |
-         (!!(PIN_COL3 & (PINBIT_COL3)) << 3) |
-         (!!(PIN_COL4 & (PINBIT_COL4)) << 4) |
-         (!!(PIN_COL5 & (PINBIT_COL5)) << 5) |
-         (!!(PIN_COL6 & (PINBIT_COL6)) << 6) |
-         (!!(PIN_COL7 & (PINBIT_COL7)) << 7) |
-         (!!(PIN_COL8 & (PINBIT_COL8)) << 8) |
-         (!!(PIN_COL9 & (PINBIT_COL9)) << 9) |
-         (!!(PIN_COL10 & (PINBIT_COL10)) << 10) |
-         (!!(PIN_COL11 & (PINBIT_COL11)) << 11) |
-         (!!(PIN_COL12 & (PINBIT_COL12)) << 12) |
-         (!!(PIN_COL13 & (PINBIT_COL13)) << 13) |
-         (!!(PIN_COL14 & (PINBIT_COL14)) << 14) |
-         (!!(PIN_COL15 & (PINBIT_COL15)) << 15);
+  uint16_t results = 0;
+  for (uint8_t i=0; i< matrix_columns; i++) {
+	results <<1;
+	results |= !!(colpins[i] & _BV(colpinbits[i]));
+  }
 }
 
 void Imago::readMatrixRow(uint8_t current_row) {
