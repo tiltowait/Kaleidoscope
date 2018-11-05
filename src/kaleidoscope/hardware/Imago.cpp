@@ -149,29 +149,29 @@ void Imago::setup(void) {
 }
 
 void Imago::toggleRow(uint8_t row) {
-   PORT_ROWS ^= row_pins[row];
+  PORT_ROWS ^= row_pins[row];
 }
 
-uint16_t Imago::readCols() {
-  return 
-(PIN_COL0 & (PINBIT_COL0) ? 0 : (_BV(0))) |
-(PIN_COL1 & (PINBIT_COL1) ? 0 : (_BV(1))) |  
-(PIN_COL2 & (PINBIT_COL2) ? 0 : (_BV(2))) |  
-(PIN_COL3 & (PINBIT_COL3) ? 0 : (_BV(3))) |  
-(PIN_COL4 & (PINBIT_COL4) ? 0 : (_BV(4))) |  
-(PIN_COL5 & (PINBIT_COL5) ? 0 : (_BV(5))) |  
-(PIN_COL6 & (PINBIT_COL6) ? 0 : (_BV(6))) |  
-(PIN_COL7 & (PINBIT_COL7) ? 0 : (_BV(7))) |  
-(PIN_COL8 & (PINBIT_COL8) ? 0 : (_BV(8))) |  
-(PIN_COL9 & (PINBIT_COL9) ? 0 : (_BV(9))) |  
-(PIN_COL10 & (PINBIT_COL10) ? 0 : (_BV(10))) |  
-(PIN_COL11 & (PINBIT_COL11) ? 0 : (_BV(11))) |  
-(PIN_COL12 & (PINBIT_COL12) ? 0 : (_BV(12))) |  
-(PIN_COL13 & (PINBIT_COL13) ? 0 : (_BV(13))) |  
-(PIN_COL14 & (PINBIT_COL14) ? 0 : (_BV(14))) |  
-(PIN_COL15 & (PINBIT_COL15) ? 0 : (_BV(15)))
-;
 
+// TODO - could we generate this code with a macro or a template
+// so it automatically adapts to the number of cols?
+uint16_t Imago::readCols() {
+  return (!!(PIN_COL0 & (PINBIT_COL0)) << 0) |
+         (!!(PIN_COL1 & (PINBIT_COL1)) << 1) |
+         (!!(PIN_COL2 & (PINBIT_COL2)) << 2) |
+         (!!(PIN_COL3 & (PINBIT_COL3)) << 3) |
+         (!!(PIN_COL4 & (PINBIT_COL4)) << 4) |
+         (!!(PIN_COL5 & (PINBIT_COL5)) << 5) |
+         (!!(PIN_COL6 & (PINBIT_COL6)) << 6) |
+         (!!(PIN_COL7 & (PINBIT_COL7)) << 7) |
+         (!!(PIN_COL8 & (PINBIT_COL8)) << 8) |
+         (!!(PIN_COL9 & (PINBIT_COL9)) << 9) |
+         (!!(PIN_COL10 & (PINBIT_COL10)) << 10) |
+         (!!(PIN_COL11 & (PINBIT_COL11)) << 11) |
+         (!!(PIN_COL12 & (PINBIT_COL12)) << 12) |
+         (!!(PIN_COL13 & (PINBIT_COL13)) << 13) |
+         (!!(PIN_COL14 & (PINBIT_COL14)) << 14) |
+         (!!(PIN_COL15 & (PINBIT_COL15)) << 15);
 }
 
 void Imago::readMatrixRow(uint8_t current_row) {
