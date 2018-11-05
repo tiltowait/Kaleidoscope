@@ -42,15 +42,7 @@ uint8_t Imago::debounce = 3;
 #define PIN_ROWS PINF
 
 
-#define PIN_ROW0 _BV(6)
-#define PIN_ROW1 _BV(5)
-#define PIN_ROW2 _BV(4)
-#define PIN_ROW3 _BV(1)
-#define PIN_ROW4 _BV(0)
-
 static constexpr uint8_t row_pins[] = {_BV(6), _BV(5), _BV(4), _BV(1), _BV(0)};
-
-#define ROW_PINS (PIN_ROW0| PIN_ROW1| PIN_ROW2| PIN_ROW3| PIN_ROW4)
 
 
  static uint8_t colpins[matrix_columns] =    {PINB,PINB,PINE,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
@@ -67,9 +59,10 @@ void Imago::setup(void) {
   wdt_disable();
   delay(100);
 
-  PORT_ROWS &= ~(ROW_PINS);
-
-  DDR_ROWS |= ROW_PINS;
+  for (uint8_t i =0; i<sizeOf(row_pins); i++) {
+	PORT_ROWS &= ~(row_pins[i]);
+  	DDR_ROWS |=row_pins[i]; 
+  }
 
   // Initialize columns
   DDRB &= ~(COLPINS_PORTB);
