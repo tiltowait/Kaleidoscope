@@ -32,7 +32,6 @@ KALEIDOSCOPE_INIT_PLUGINS(Macros);
 
 void setup() {
   Kaleidoscope.setup();
-Serial.begin(9600);
 }
 
 void loop() {
