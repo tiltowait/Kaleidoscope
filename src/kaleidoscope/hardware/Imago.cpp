@@ -42,27 +42,41 @@ uint8_t Imago::debounce = 3;
 #define PIN_ROWS PINF
 
 
-static constexpr uint8_t row_pins[] = {_BV(6), _BV(5), _BV(4), _BV(1), _BV(0)};
+// SUB D1 for  D5
+// SUB D0 for  E2
+
+static constexpr uint8_t row_pin_bits[] = {6,5,4,1,0};
 
 
- static uint8_t colpins[matrix_columns] =    {PINB,PINB,PINE,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
-static constexpr uint8_t colpinbits[matrix_columns] = {2,7,2,7,6,6,5,4,7,6,4,5,3,2,6,7};
 
+/* Production
 #define COLPINS_PORTB ( _BV(2)|_BV(4)|_BV(5)|_BV(6)|_BV(7))
 #define COLPINS_PORTC (_BV(6)|_BV(7))
 #define COLPINS_PORTD (_BV(2)| _BV(3)|_BV(4)|_BV(5)|_BV(6)|_BV(7))
 #define COLPINS_PORTE (_BV(2)|_BV(6))
 #define COLPINS_PORTF (_BV(7))
 
+uint8_t Imago::col_pins[matrix_columns] =    {PINB,PINB,PINE,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
+uint8_t Imago::col_pin_bits[matrix_columns] = {2,7,2,7,6,6,5,4,7,6,4,5,3,2,6,7};
+*/
+
+// Handwired prototype
+#define COLPINS_PORTB ( _BV(2)|_BV(4)|_BV(5)|_BV(6)|_BV(7))
+#define COLPINS_PORTC (_BV(6)|_BV(7))
+#define COLPINS_PORTD (_BV(2)| _BV(3)|_BV(4)|_BV(0)|_BV(6)|_BV(7)|_BV(1))
+#define COLPINS_PORTE (_BV(6))
+#define COLPINS_PORTF (_BV(7))
+
+uint8_t Imago::col_pins[matrix_columns] =    {PINB,PINB,PIND,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
+uint8_t Imago::col_pin_bits[matrix_columns] = {2,7,0,7,6,6,5,4,7,6,4,1,3,2,6,7};
 
 void Imago::setup(void) {
   wdt_disable();
-  delay(100);
+  delay(2000);
+	Serial.begin(9600);
+	Serial.println("Starting up");
 
-  for (uint8_t i =0; i<sizeOf(row_pins); i++) {
-	PORT_ROWS &= ~(row_pins[i]);
-  	DDR_ROWS |=row_pins[i]; 
-  }
+
 
   // Initialize columns
   DDRB &= ~(COLPINS_PORTB);
@@ -80,6 +94,19 @@ void Imago::setup(void) {
   DDRF &= ~(COLPINS_PORTF);
   PORTF |= (COLPINS_PORTF);
 
+
+  DDRB = 0;
+  DDRC = 0;
+  DDRD = 0;
+  DDRE = 0;
+  DDRF = 0;
+
+  for (uint8_t i =0; i<sizeof(row_pin_bits); i++) {
+	PORT_ROWS ^= _BV(row_pin_bits[i]);
+  	DDR_ROWS |= _BV(row_pin_bits[i]); 
+	Serial.print("Setting up row ");
+	Serial.println(i);
+  }
   /* Set up Timer1 for 500usec */
   TCCR1B = _BV(WGM13);
   TCCR1A = 0;
@@ -92,21 +119,23 @@ void Imago::setup(void) {
 }
 
 void Imago::toggleRow(uint8_t row) {
-  PORT_ROWS ^= row_pins[row];
+  PORT_ROWS ^= _BV(row_pin_bits[row]);
 }
 
 
 uint16_t Imago::readCols() {
   uint16_t results = 0;
   for (uint8_t i=0; i< matrix_columns; i++) {
-	results <<1;
-	results |= !!(colpins[i] & _BV(colpinbits[i]));
+	results <<=1;
+	results |= !!(col_pins[i] & _BV(col_pin_bits[i]));
   }
+  Serial.println(results,BIN);
+ return 0;//  return results;
 }
 
 void Imago::readMatrixRow(uint8_t current_row) {
   uint16_t mask, cols;
-
+  
   previousKeyState_[current_row] = keyState_[current_row];
 
   mask = debounceMaskForRow(current_row);
@@ -144,6 +173,7 @@ void Imago::scanMatrix() {
 
   readMatrix();
   actOnMatrixScan();
+  delay(5000);
 }
 
 void Imago::maskKey(byte row, byte col) {

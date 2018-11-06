@@ -42,7 +42,6 @@ class Imago {
   static constexpr uint8_t matrix_columns = 16;
   static constexpr uint8_t matrix_rows = 5;
   static constexpr int8_t led_count = 0;
-
   void syncLeds(void) {}
   void setCrgbAt(uint8_t row, byte col, cRGB color) {}
   void setCrgbAt(int8_t i, cRGB crgb) {}
@@ -121,6 +120,8 @@ class Imago {
   static uint16_t previousKeyState_[matrix_rows];
   static uint16_t keyState_[matrix_rows];
   static uint16_t masks_[matrix_rows];
+  static uint8_t col_pin_bits[matrix_columns];
+  static uint8_t col_pins[matrix_columns];
 
   static void readMatrixRow(uint8_t row);
   static uint16_t readCols();
