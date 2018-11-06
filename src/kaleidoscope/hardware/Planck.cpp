@@ -34,6 +34,7 @@ uint8_t matrix_row_pins[] = { PIN_D0, PIN_D5, PIN_B5, PIN_B6 };
 uint8_t matrix_col_pins[] = { PIN_F1, PIN_F0, PIN_B0, PIN_C7, PIN_F4, PIN_F5, PIN_F6, PIN_F7, PIN_D4, PIN_D6, PIN_B4, PIN_D7 };
 uint8_t matrix_columns = sizeof(matrix_col_pins);
 uint8_t matrix_rows = sizeof(matrix_row_pins);
+
 uint16_t Planck::previousKeyState_[matrix_rows] = {0} ;
 uint16_t Planck::keyState_[matrix_rows] = {0};
 uint16_t Planck::masks_[matrix_rows];
@@ -46,19 +47,20 @@ uint8_t Planck::debounce = 3;
 void Planck::setup(void) {
   wdt_disable();
   delay(2000);
-	Serial.begin(9600);
-	Serial.println("Starting up");
+  Serial.begin(9600);
+  Serial.println("Starting up");
 
 
-  for (uint8_t i =0; i<sizeof(matrix_col_pins); i++) {
-	DDR_INPUT(matrix_col_pins[i]);
-	ENABLE_PULLUP(matrix_col_pins[i]);
-   } 
-
-  for (uint8_t i =0; i<sizeof(matrix_row_pins); i++) {
-	DDR_OUTPUT(matrix_row_pins[i]);
-  	OUTPUT_HIGH(matrix_row_pins[i]);
+  for (uint8_t i = 0; i < sizeof(matrix_col_pins); i++) {
+    DDR_INPUT(matrix_col_pins[i]);
+    ENABLE_PULLUP(matrix_col_pins[i]);
   }
+
+  for (uint8_t i = 0; i < sizeof(matrix_row_pins); i++) {
+    DDR_OUTPUT(matrix_row_pins[i]);
+    OUTPUT_HIGH(matrix_row_pins[i]);
+  }
+
   /* Set up Timer1 for 500usec */
   TCCR1B = _BV(WGM13);
   TCCR1A = 0;
@@ -77,18 +79,17 @@ void Planck::toggleRow(uint8_t row_pin) {
 
 uint16_t Planck::readCols() {
   uint16_t results = 0xFF ;
-  for (uint8_t i =0; i<sizeof(matrix_col_pins); i++) {
-	if (READ_PIN(matrix_col_pins[i])) {
-		results |= _BV(i);
-	}
-   }
-  //Serial.println(results,BIN);
- return results;
+  for (uint8_t i = 0; i < sizeof(matrix_col_pins); i++) {
+    if (READ_PIN(matrix_col_pins[i])) {
+      results |= _BV(i);
+    }
+  }
+  return results;
 }
 
 void Planck::readMatrixRow(uint8_t current_row) {
   uint16_t mask, cols;
-  
+
   previousKeyState_[current_row] = keyState_[current_row];
 
   mask = debounceMaskForRow(current_row);
