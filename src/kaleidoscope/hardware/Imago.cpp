@@ -70,6 +70,56 @@ uint8_t Imago::col_pin_bits[matrix_columns] = {2,7,2,7,6,6,5,4,7,6,4,5,3,2,6,7};
 uint8_t Imago::col_pins[matrix_columns] =    {PINB,PINB,PIND,PINC,PINC,PINB,PINB,PINB,PIND,PIND,PIND,PIND,PIND,PIND,PINE,PINF};
 uint8_t Imago::col_pin_bits[matrix_columns] = {2,7,0,7,6,6,5,4,7,6,4,1,3,2,6,7};
 
+
+#define PIN_COL0 PINB
+#define PINBIT_COL0 _BV(2)
+
+#define PIN_COL1 PINB
+#define PINBIT_COL1 _BV(7)
+
+#define PIN_COL2 PIND
+#define PINBIT_COL2 _BV(0)
+
+#define PIN_COL3 PINC
+#define PINBIT_COL3 _BV(7)
+
+#define PIN_COL4 PINC
+#define PINBIT_COL4 _BV(6)
+
+#define PIN_COL5 PINB
+#define PINBIT_COL5 _BV(6)
+
+#define PIN_COL6 PINB
+#define PINBIT_COL6 _BV(5)
+
+#define PIN_COL7 PINB
+#define PINBIT_COL7 _BV(4)
+
+#define PIN_COL8 PIND
+#define PINBIT_COL8 _BV(7)
+
+#define PIN_COL9 PIND
+#define PINBIT_COL9 _BV(6)
+
+#define PIN_COL10 PIND
+#define PINBIT_COL10 _BV(4)
+
+#define PIN_COL11 PIND
+#define PINBIT_COL11 _BV(1)
+
+#define PIN_COL12 PIND
+#define PINBIT_COL12 _BV(3)
+
+#define PIN_COL13 PIND
+#define PINBIT_COL13 _BV(2)
+
+#define PIN_COL14 PINE
+#define PINBIT_COL14 _BV(6)
+
+#define PIN_COL15 PINF
+#define PINBIT_COL15 _BV(7)
+
+
 void Imago::setup(void) {
   wdt_disable();
   delay(2000);
