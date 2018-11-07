@@ -143,11 +143,11 @@ bool Planck::isKeyMasked(byte row, byte col) {
 
 
 void Planck::detachFromHost() {
-  UDCON |= (1 << DETACH);
+  UDCON |= _BV(DETACH);
 }
 
 void Planck::attachToHost() {
-  UDCON &= ~(1 << DETACH);
+  UDCON &= ~_BV(DETACH);
 }
 
 bool Planck::isKeyswitchPressed(byte row, byte col) {
@@ -175,7 +175,7 @@ uint16_t Planck::debounceMaskForRow(uint8_t row) {
     if (debounce_matrix_[row][c]) {
       --debounce_matrix_[row][c];
     } else {
-      result |= (1 << c);
+      result |= _BV(c);
     }
   }
   return result;
@@ -183,7 +183,7 @@ uint16_t Planck::debounceMaskForRow(uint8_t row) {
 
 void Planck::debounceRow(uint16_t change, uint8_t row) {
   for (uint16_t i = 0; i < matrix_columns; ++i) {
-    if (change & (1 << i)) {
+    if (change & _BV(i)) {
       debounce_matrix_[row][i] = debounce;
     }
   }
