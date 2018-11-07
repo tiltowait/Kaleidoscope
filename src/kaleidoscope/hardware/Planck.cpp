@@ -46,9 +46,6 @@ uint8_t Planck::debounce = 3;
 
 void Planck::setup(void) {
   wdt_disable();
-  delay(2000);
-  Serial.begin(9600);
-  Serial.println("Starting up");
 
 
   for (uint8_t i = 0; i < sizeof(matrix_col_pins); i++) {
@@ -72,15 +69,11 @@ void Planck::setup(void) {
   TIMSK1 = _BV(TOIE1);
 }
 
-void Planck::toggleRow(uint8_t row_pin) {
-  OUTPUT_TOGGLE(row_pin);
-}
-
 
 uint16_t Planck::readCols() {
-  uint16_t results = 0xFF ;
+  uint16_t results = 0x00 ;
   for (uint8_t i = 0; i < sizeof(matrix_col_pins); i++) {
-    if (READ_PIN(matrix_col_pins[i])) {
+    if (!READ_PIN(matrix_col_pins[i])) {
       results |= _BV(i);
     }
   }
@@ -89,14 +82,13 @@ uint16_t Planck::readCols() {
 
 void Planck::readMatrixRow(uint8_t current_row) {
   uint16_t mask, cols;
-
   previousKeyState_[current_row] = keyState_[current_row];
 
   mask = debounceMaskForRow(current_row);
 
-  toggleRow(matrix_row_pins[current_row]);
+  OUTPUT_TOGGLE(matrix_row_pins[current_row]);
   cols = (readCols() & mask) | (keyState_[current_row] & ~mask);
-  toggleRow(matrix_row_pins[current_row]);
+  OUTPUT_TOGGLE(matrix_row_pins[current_row]);
   debounceRow(cols ^ keyState_[current_row], current_row);
   keyState_[current_row] = cols;
 }
