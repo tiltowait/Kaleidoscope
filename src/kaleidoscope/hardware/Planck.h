@@ -122,9 +122,7 @@ class Planck {
   static uint16_t keyState_[matrix_rows];
   static uint16_t masks_[matrix_rows];
 
-  static void readMatrixRow(uint8_t row);
   static uint16_t readCols();
-  static void toggleRow(uint8_t row);
 
   static uint8_t debounce_matrix_[matrix_rows][matrix_columns];
   static uint16_t debounceMaskForRow(uint8_t row);
