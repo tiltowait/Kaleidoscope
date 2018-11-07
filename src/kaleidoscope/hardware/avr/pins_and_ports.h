@@ -128,12 +128,12 @@
 /* converting pins to ports */
 enum { PIN_OFFSET, DDR_OFFSET, PORT_OFFSET};
 
-#define PIN_ADDRESS_MASK 0x0000FFFF
+#define PIN_ADDRESS_MASK 0xF
 
 #define PIN_ADDRESS(p, offset) _SFR_IO8(ADDRESS_BASE + (p >> PORT_SHIFTER) + offset)
-#define PIN_REG_FOR_PIN(pin) _SFR_IO8(PIN_ADDRESS(pin, PIN_OFFSET ))
-#define DDR_REG_FOR_PIN(pin) _SFR_IO8(PIN_ADDRESS(pin, DDR_OFFSET ))
-#define PORT_REG_FOR_PIN(pin) _SFR_IO8(PIN_ADDRESS(pin, PORT_OFFSET ))
+#define PIN_REG_FOR_PIN(pin) PIN_ADDRESS(pin, PIN_OFFSET )
+#define DDR_REG_FOR_PIN(pin) PIN_ADDRESS(pin, DDR_OFFSET )
+#define PORT_REG_FOR_PIN(pin) PIN_ADDRESS(pin, PORT_OFFSET )
 #define PIN_NUM_FOR_PIN(pin) ( pin & PIN_ADDRESS_MASK )
 #define PIN_MASK_FOR_PIN(pin) _BV(PIN_NUM_FOR_PIN(pin))
 
