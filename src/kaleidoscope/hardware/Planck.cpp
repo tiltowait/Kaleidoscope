@@ -73,29 +73,27 @@ void Planck::setup(void) {
 uint16_t Planck::readCols() {
   uint16_t results = 0x00 ;
   for (uint8_t i = 0; i < matrix_columns; i++) {
-      results |= (!READ_PIN(matrix_col_pins[i]) <<i);
-
+    results |= (!READ_PIN(matrix_col_pins[i]) << i);
   }
   return results;
 }
 
-void Planck::readMatrixRow(uint8_t current_row) {
-  uint16_t mask, cols;
-  previousKeyState_[current_row] = keyState_[current_row];
-
-  mask = debounceMaskForRow(current_row);
-
-  OUTPUT_TOGGLE(matrix_row_pins[current_row]);
-  cols = (readCols() & mask) | (keyState_[current_row] & ~mask);
-  OUTPUT_TOGGLE(matrix_row_pins[current_row]);
-  debounceRow(cols ^ keyState_[current_row], current_row);
-  keyState_[current_row] = cols;
-}
-
 void Planck::readMatrix() {
   do_scan_ = false;
+
   for (uint8_t current_row = 0; current_row < sizeof(matrix_row_pins); current_row++) {
-    readMatrixRow(current_row);
+    uint16_t mask, cols;
+    previousKeyState_[current_row] = keyState_[current_row];
+
+    mask = debounceMaskForRow(current_row);
+
+    OUTPUT_TOGGLE(matrix_row_pins[current_row]);
+    cols = (readCols() & mask) | (keyState_[current_row] & ~mask);
+    OUTPUT_TOGGLE(matrix_row_pins[current_row]);
+    debounceRow(cols ^ keyState_[current_row], current_row);
+    keyState_[current_row] = cols;
+
+
   }
 }
 
