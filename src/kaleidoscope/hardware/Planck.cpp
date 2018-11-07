@@ -72,10 +72,9 @@ void Planck::setup(void) {
 
 uint16_t Planck::readCols() {
   uint16_t results = 0x00 ;
-  for (uint8_t i = 0; i < sizeof(matrix_col_pins); i++) {
-    if (!READ_PIN(matrix_col_pins[i])) {
-      results |= _BV(i);
-    }
+  for (uint8_t i = 0; i < matrix_columns; i++) {
+      results |= (!READ_PIN(matrix_col_pins[i]) <<i);
+
   }
   return results;
 }
