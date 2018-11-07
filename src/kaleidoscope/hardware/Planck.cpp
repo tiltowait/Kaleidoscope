@@ -79,10 +79,10 @@ uint16_t Planck::readCols() {
 }
 
 void Planck::readMatrix() {
-  do_scan_ = false;
 
   for (uint8_t current_row = 0; current_row < sizeof(matrix_row_pins); current_row++) {
     uint16_t mask, cols;
+
     previousKeyState_[current_row] = keyState_[current_row];
 
     mask = debounceMaskForRow(current_row);
@@ -113,6 +113,8 @@ void Planck::actOnMatrixScan() {
 void Planck::scanMatrix() {
   if (!do_scan_)
     return;
+
+  do_scan_ = false;
 
   readMatrix();
   actOnMatrixScan();
