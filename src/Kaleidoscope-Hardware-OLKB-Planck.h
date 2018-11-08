@@ -1,10 +1,11 @@
 /* -*- mode: c++ -*-
- * Kaleidoscope-Hardware-Planck -- OLKB Planck hardware support for Kaleidoscope
+ * Kaleidoscope-Hardware-Keyboardio-Imago -- Imago hardware support for Kaleidoscope
  * Copyright (C) 2018  Keyboard.io, Inc
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of version 3 of the GNU General Public License as
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,18 +16,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef ARDUINO_AVR_PLANCK
-
-#include <Kaleidoscope.h>
-#include <KeyboardioHID.h>
-#include <avr/wdt.h>
-
-
-ISR(TIMER1_OVF_vect) {
-  do_scan_ = true;
-}
-
-HARDWARE_IMPLEMENTATION KeyboardHardware;
-kaleidoscope::hardware::Planck &Planck = KeyboardHardware;
-
-#endif
+#pragma once
+#include "kaleidoscope/hardware/Planck.h"
