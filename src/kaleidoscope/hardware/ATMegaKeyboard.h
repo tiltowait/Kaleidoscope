@@ -18,9 +18,14 @@
 #pragma once
 
 #include <Arduino.h>
+#include <avr/wdt.h>
 #include "Kaleidoscope-HIDAdaptor-KeyboardioHID.h"
 #include "kaleidoscope/macro_helpers.h"
 #include "kaleidoscope/hardware/avr/pins_and_ports.h"
+#include "kaleidoscope/Kaleidoscope.h"
+#include "kaleidoscope/key_defs.h"
+#include "kaleidoscope/key_events.h"
+
 
 struct cRGB {
   uint8_t r, g, b;
