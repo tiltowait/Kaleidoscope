@@ -33,6 +33,7 @@ extern void releaseRawKey(Key mappedKey);
 /** Flushes any pending regular key switch events and sends them out */
 extern void sendKeyboardReport();
 
+extern boolean isModifierKey(Key mappedKey);
 extern boolean isModifierKeyActive(Key mappedKey);
 extern boolean wasModifierKeyActive(Key mappedKey);
 
